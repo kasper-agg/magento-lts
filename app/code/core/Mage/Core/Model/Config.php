@@ -1462,12 +1462,12 @@ class Mage_Core_Model_Config extends Mage_Core_Model_Config_Base
     /**
      * Retrieve module class name
      *
-     * @param  string $modelClass
+     * @param  null|string $modelClass
      * @return string
      */
     public function getModelClassName($modelClass)
     {
-        $modelClass = trim($modelClass);
+        $modelClass = trim((string) $modelClass);
         if (!str_contains($modelClass, '/')) {
             return $modelClass;
         }

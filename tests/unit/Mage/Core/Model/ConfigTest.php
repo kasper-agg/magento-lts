@@ -46,4 +46,27 @@ final class ConfigTest extends OpenMageTest
         self::$subject->deleteConfig($path);
         self::assertFalse(self::$subject->getConfig($path));
     }
+
+    /**
+     * A class alias read from a missing config node is null; that must not raise a deprecation notice
+     *
+     * @group Model
+     */
+    public function testGetModelClassNameWithNull(): void
+    {
+        $deprecations = [];
+        set_error_handler(static function (int $errno, string $errstr) use (&$deprecations): bool {
+            $deprecations[] = $errstr;
+            return true;
+        }, E_DEPRECATED);
+
+        try {
+            $className = self::$subject->getModelClassName(null);
+        } finally {
+            restore_error_handler();
+        }
+
+        self::assertSame('', $className);
+        self::assertSame([], $deprecations);
+    }
 }

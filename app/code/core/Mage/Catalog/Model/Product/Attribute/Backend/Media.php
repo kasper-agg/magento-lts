@@ -356,6 +356,12 @@ class Mage_Catalog_Model_Product_Attribute_Backend_Media extends Mage_Eav_Model_
             ];
         }
 
+        // The admin product form posts the images as JSON, which only beforeSave() decodes
+        if (!is_array($mediaGalleryData['images'] ?? null)) {
+            $images = (string) ($mediaGalleryData['images'] ?? '');
+            $mediaGalleryData['images'] = $images !== '' ? Mage::helper('core')->jsonDecode($images) : [];
+        }
+
         foreach ($mediaGalleryData['images'] as &$image) {
             if (isset($image['position']) && $image['position'] > $position) {
                 $position = $image['position'];
